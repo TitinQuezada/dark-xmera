@@ -71,3 +71,11 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## You need add this enviroment variables
+
+```bash
+DARK_XMERA_SECURITY_URL
+
+DARK_XMERA_RRHH_URL
+```
