@@ -11,11 +11,14 @@ export class PermissionsMiddleware implements NestMiddleware {
 
   use(request: Request, response: Response, next: NextFunction) {
     const secondPosition = 1;
+
     const unauthorizedResponse = HttpResponse.getFailedResponse(
       'No tiene autorización',
       401,
     );
+
     const tokenParts = request.headers.authorization.split(' ');
+
     const token = tokenParts[secondPosition];
 
     const agent = new https.Agent({
