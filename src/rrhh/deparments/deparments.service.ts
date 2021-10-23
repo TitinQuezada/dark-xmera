@@ -4,13 +4,13 @@ import { RrhhHttpClientService } from 'src/utils/http-client/rrhh-http-client.se
 import { OperationResult } from 'src/utils/operation-result';
 
 @Injectable()
-export class PositionsService {
-  private readonly positionsRoute = Routes.humanResourcesRoutes.positions;
+export class DeparmentsService {
+  private readonly deparmentsRoute = Routes.humanResourcesRoutes.deparments;
 
   constructor(private readonly rrhhHttpClientService: RrhhHttpClientService) {}
 
   async getAll(): Promise<OperationResult<Array<any>>> {
-    const response = await this.rrhhHttpClientService.get(this.positionsRoute);
+    const response = await this.rrhhHttpClientService.get(this.deparmentsRoute);
 
     if (response.error) {
       return OperationResult.fail(response.error.errorMessage);
@@ -21,7 +21,7 @@ export class PositionsService {
 
   async getById(id: string): Promise<OperationResult<any>> {
     const response = await this.rrhhHttpClientService.get(
-      `${this.positionsRoute}/${id}`,
+      `${this.deparmentsRoute}/${id}`,
     );
 
     if (response.error) {
@@ -33,7 +33,7 @@ export class PositionsService {
 
   async create(position: any): Promise<OperationResult<any>> {
     const response = await this.rrhhHttpClientService.post(
-      this.positionsRoute,
+      this.deparmentsRoute,
       position,
     );
 
@@ -46,7 +46,7 @@ export class PositionsService {
 
   async update(id: string, position: any): Promise<OperationResult<any>> {
     const response = await this.rrhhHttpClientService.put(
-      `${this.positionsRoute}/${id}`,
+      `${this.deparmentsRoute}/${id}`,
       position,
     );
 
@@ -59,7 +59,7 @@ export class PositionsService {
 
   async delete(id: string): Promise<OperationResult<any>> {
     const response = await this.rrhhHttpClientService.delete(
-      `${this.positionsRoute}/${id}`,
+      `${this.deparmentsRoute}/${id}`,
     );
 
     if (response.error) {

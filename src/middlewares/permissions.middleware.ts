@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as https from 'https';
+import { lastValueFrom } from 'rxjs';
 import { Routes } from 'src/routes/routes';
 import { HttpResponse } from 'src/utils/http-response';
 
@@ -9,7 +10,7 @@ import { HttpResponse } from 'src/utils/http-response';
 export class PermissionsMiddleware implements NestMiddleware {
   constructor(private readonly httpService: HttpService) {}
 
-  use(request: Request, response: Response, next: NextFunction) {
+  async use(request: Request, response: Response, next: NextFunction) {
     const secondPosition = 1;
 
     const unauthorizedResponse = HttpResponse.getFailedResponse(
@@ -17,57 +18,62 @@ export class PermissionsMiddleware implements NestMiddleware {
       401,
     );
 
+    if (!request.headers.authorization) {
+      return response.json(unauthorizedResponse);
+    }
+
     const tokenParts = request.headers.authorization.split(' ');
 
     const token = tokenParts[secondPosition];
 
+    const isAuthorize = await this.isAuthorize(token, request.baseUrl);
+
+    if (!isAuthorize) {
+      return response.json(unauthorizedResponse);
+    }
+
+    next();
+  }
+
+  async isAuthorize(token: string, baseUrl): Promise<boolean> {
     const agent = new https.Agent({
       rejectUnauthorized: false,
     });
 
-    this.httpService
-      .post(
-        `${process.env.DARK_XMERA_SECURITY_URL}${Routes.securityRoutes.permissions}`,
-        { token },
-        { httpsAgent: agent },
-      )
-      .subscribe(({ data: httpResponse }) => {
-        if (httpResponse.error) {
-          return response.json(unauthorizedResponse);
-        }
+    const observable = this.httpService.post(
+      `${process.env.DARK_XMERA_SECURITY_URL}${Routes.securityRoutes.permissions}`,
+      { token },
+      { httpsAgent: agent },
+    );
 
-        const containsModule = this.containsUrl(
-          request.baseUrl,
-          httpResponse.data.modules,
-        );
+    const { data: httpResponse } = await lastValueFrom(observable);
 
-        if (!containsModule) {
-          return response.json(unauthorizedResponse);
-        }
+    if (httpResponse.error) {
+      return false;
+    }
 
-        const containsScreen = this.containsUrl(
-          request.baseUrl,
-          httpResponse.data.screens,
-        );
+    const containsModule = this.containsUrl(baseUrl, httpResponse.data.modules);
 
-        if (!containsScreen) {
-          return response.json(unauthorizedResponse);
-        }
+    if (!containsModule) {
+      return false;
+    }
 
-        next();
-      });
+    const containsScreen = this.containsUrl(baseUrl, httpResponse.data.screens);
+
+    if (!containsScreen) {
+      return false;
+    }
+
+    return true;
   }
 
   containsUrl(baseUrl: string, array: Array<any>): boolean {
-    let containsUrl = false;
-
     for (let index = 0; index < array.length; index++) {
       if (baseUrl.includes(array[index].url)) {
-        containsUrl = true;
-        break;
+        return true;
       }
     }
 
-    return containsUrl;
+    return false;
   }
 }
