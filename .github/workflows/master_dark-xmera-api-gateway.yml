@@ -66,5 +66,5 @@ jobs:
         with:
           app-name: 'dark-xmera-api-gateway'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8046F18C3EE749619A2C4F244716333A }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D27C0C34D7DF45D3A288CA07A04EBDC9 }}
           package: .
