@@ -9,15 +9,15 @@ import {
 } from '@nestjs/common';
 import { Routes } from 'src/routes/routes';
 import { HttpResponse } from 'src/utils/http-response';
-import { PositionsService } from './positions.service';
+import { DeparmentsService } from './deparments.service';
 
-@Controller(Routes.controllersRoutes.positions)
-export class PositionsController {
-  constructor(private readonly positionsService: PositionsService) {}
+@Controller(Routes.controllersRoutes.deparments)
+export class DeparmentsController {
+  constructor(private readonly deparmentsService: DeparmentsService) {}
 
   @Get()
   async getAll() {
-    const operationResult = await this.positionsService.getAll();
+    const operationResult = await this.deparmentsService.getAll();
 
     if (!operationResult.success) {
       return HttpResponse.getFailedResponse(operationResult.errorMessage);
@@ -28,7 +28,7 @@ export class PositionsController {
 
   @Get(':id')
   async getById(@Param('id') id: string) {
-    const operationResult = await this.positionsService.getById(id);
+    const operationResult = await this.deparmentsService.getById(id);
 
     if (!operationResult.success) {
       return HttpResponse.getFailedResponse(operationResult.errorMessage);
@@ -39,7 +39,7 @@ export class PositionsController {
 
   @Post()
   async create(@Body() position): Promise<HttpResponse<any>> {
-    const operationResult = await this.positionsService.create(position);
+    const operationResult = await this.deparmentsService.create(position);
 
     if (!operationResult.success) {
       return HttpResponse.getFailedResponse(operationResult.errorMessage);
@@ -53,7 +53,7 @@ export class PositionsController {
     @Param('id') id: string,
     @Body() position,
   ): Promise<HttpResponse<any>> {
-    const operationResult = await this.positionsService.update(id, position);
+    const operationResult = await this.deparmentsService.update(id, position);
 
     if (!operationResult.success) {
       return HttpResponse.getFailedResponse(operationResult.errorMessage);
@@ -64,7 +64,7 @@ export class PositionsController {
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<HttpResponse<any>> {
-    const operationResult = await this.positionsService.delete(id);
+    const operationResult = await this.deparmentsService.delete(id);
 
     if (!operationResult.success) {
       return HttpResponse.getFailedResponse(operationResult.errorMessage);
