@@ -16,8 +16,6 @@ export class HttpClientService {
 
   setBaseUrl(baseUrl: string) {
     this.httpService.axiosRef.defaults.baseURL = baseUrl;
-
-    console.log(this.httpService.axiosRef.defaults.baseURL);
   }
 
   async get(route: string): Promise<HttpResponse<any>> {
@@ -29,8 +27,6 @@ export class HttpClientService {
   }
 
   async post(route: string, body: any): Promise<HttpResponse<any>> {
-    // console.log(this.httpService.axiosRef.defaults.baseURL);
-
     const observable = this.httpService.post(route, body);
 
     const { data } = await lastValueFrom(observable);
