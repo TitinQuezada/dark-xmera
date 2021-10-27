@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Routes } from 'src/routes/routes';
-import { RrhhHttpClientService } from 'src/utils/http-client/rrhh-http-client.service';
+import { HttpClientService } from 'src/utils/http-client/http-client.service';
 import { OperationResult } from 'src/utils/operation-result';
 
 @Injectable()
 export class PositionsService {
   private readonly positionsRoute = Routes.humanResourcesRoutes.positions;
 
-  constructor(private readonly rrhhHttpClientService: RrhhHttpClientService) {}
+  constructor(private readonly httpClientService: HttpClientService) {}
 
   async getAll(): Promise<OperationResult<Array<any>>> {
-    const response = await this.rrhhHttpClientService.get(this.positionsRoute);
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.get(this.positionsRoute);
 
     if (response.error) {
       return OperationResult.fail(response.error.errorMessage);
@@ -20,7 +22,9 @@ export class PositionsService {
   }
 
   async getById(id: string): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.get(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.get(
       `${this.positionsRoute}/${id}`,
     );
 
@@ -32,7 +36,9 @@ export class PositionsService {
   }
 
   async create(position: any): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.post(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.post(
       this.positionsRoute,
       position,
     );
@@ -45,7 +51,9 @@ export class PositionsService {
   }
 
   async update(id: string, position: any): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.put(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.put(
       `${this.positionsRoute}/${id}`,
       position,
     );
@@ -58,7 +66,9 @@ export class PositionsService {
   }
 
   async delete(id: string): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.delete(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.delete(
       `${this.positionsRoute}/${id}`,
     );
 

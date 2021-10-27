@@ -5,16 +5,17 @@ import { lastValueFrom } from 'rxjs';
 import { HttpResponse } from '../http-response';
 
 @Injectable()
-export class RrhhHttpClientService {
+export class HttpClientService {
   constructor(private readonly httpService: HttpService) {
     const agent = new https.Agent({
       rejectUnauthorized: false,
     });
 
-    this.httpService.axiosRef.defaults.baseURL =
-      process.env.DARK_XMERA_RRHH_URL;
-
     this.httpService.axiosRef.defaults.httpsAgent = agent;
+  }
+
+  setBaseUrl(baseUrl: string) {
+    this.httpService.axiosRef.defaults.baseURL = baseUrl;
   }
 
   async get(route: string): Promise<HttpResponse<any>> {
