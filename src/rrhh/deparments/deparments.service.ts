@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Routes } from 'src/routes/routes';
-import { RrhhHttpClientService } from 'src/utils/http-client/rrhh-http-client.service';
+import { HttpClientService } from 'src/utils/http-client/http-client.service';
 import { OperationResult } from 'src/utils/operation-result';
 
 @Injectable()
 export class DeparmentsService {
   private readonly deparmentsRoute = Routes.humanResourcesRoutes.deparments;
 
-  constructor(private readonly rrhhHttpClientService: RrhhHttpClientService) {}
+  constructor(private readonly httpClientService: HttpClientService) {}
 
   async getAll(): Promise<OperationResult<Array<any>>> {
-    const response = await this.rrhhHttpClientService.get(this.deparmentsRoute);
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.get(this.deparmentsRoute);
 
     if (response.error) {
       return OperationResult.fail(response.error.errorMessage);
@@ -20,7 +22,9 @@ export class DeparmentsService {
   }
 
   async getById(id: string): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.get(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.get(
       `${this.deparmentsRoute}/${id}`,
     );
 
@@ -32,7 +36,9 @@ export class DeparmentsService {
   }
 
   async create(position: any): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.post(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.post(
       this.deparmentsRoute,
       position,
     );
@@ -45,7 +51,9 @@ export class DeparmentsService {
   }
 
   async update(id: string, position: any): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.put(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.put(
       `${this.deparmentsRoute}/${id}`,
       position,
     );
@@ -58,7 +66,9 @@ export class DeparmentsService {
   }
 
   async delete(id: string): Promise<OperationResult<any>> {
-    const response = await this.rrhhHttpClientService.delete(
+    this.httpClientService.setBaseUrl(process.env.DARK_XMERA_RRHH_URL);
+
+    const response = await this.httpClientService.delete(
       `${this.deparmentsRoute}/${id}`,
     );
 

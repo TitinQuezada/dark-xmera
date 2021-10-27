@@ -1,10 +1,10 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { RrhhHttpClientService } from 'src/utils/http-client/rrhh-http-client.service';
+import { HttpClientService } from 'src/utils/http-client/http-client.service';
 
 @Module({
   imports: [HttpModule],
-  providers: [RrhhHttpClientService],
-  exports: [RrhhHttpClientService, HttpModule],
+  providers: [HttpClientService],
+  exports: [HttpClientService, HttpModule],
 })
 export class SharedModule {}
